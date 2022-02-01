@@ -18,3 +18,21 @@ Here are some ideas to get you started:-->
 ### My Links:
 - Personal website: [sirus.click](https://sirus.click/)
 - ---
+
+### OOP Code Snippet
+~~~ts
+class Intro:
+    def __init__(self, name: str, gender: str, role: str, hobby: str):
+        self.name = name
+        self.gender = gender
+        self.__role = role
+        self.hobby = hobby
+
+    def hi(self):
+        return f'Hi! I am {self.name}, a {self.__role}.I speak: English, Swahili, Somali & Arabic.I like science, computer and {self.hobby}'
+
+
+me = Intro('Mohamed', 'M', 'Programmer and ICT', 'robotics(Battlebot channel)')
+print(me.hi())
+~~~
+---
