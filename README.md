@@ -36,3 +36,9 @@ me = Intro('Mohamed', 'M', 'Programmer and ICT', 'robotics(Battlebot channel)')
 print(me.hi())
 ~~~
 ---
+### Statistics:
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=eduper1&count_private=true&show_icons=true&theme=cobalt)](https://github.com/anuraghazra/github-readme-stats)
+
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=eduper1)](https://github.com/anuraghazra/github-readme-stats)
+
+<!--[![willianrod's wakatime stats](https://github-readme-stats.vercel.app/api/wakatime?username=eduper1)](https://github.com/anuraghazra/github-readme-stats)-->
