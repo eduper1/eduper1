@@ -1,5 +1,12 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    TODO
+    {% if user.is_authenticated %}
+
+    <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{post.content}}
+    <button class="btn btn-success mt-4 mb-4" type=" submit ">Create</button>
+</form>
+    {% endif %}
 {% endblock %}
