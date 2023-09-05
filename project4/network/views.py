@@ -5,13 +5,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import NewPost
 
-from .models import User
+from .models import User,Post
 
 
 def index(request):
+    getPosts = Post.objects.all().order_by('-posted_at')
     return render(request, "network/index.html",
                   {
                       "form":NewPost(),
+                      "posts":getPosts,
                   })
     
     
