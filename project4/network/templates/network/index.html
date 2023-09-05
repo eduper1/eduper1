@@ -5,7 +5,17 @@
 
     <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{post.content}}
+    <div class="form-group">
+        <label for="" class="form-label">
+            {{ form.content.label_tag }}
+        </label>
+        <p>
+            <small id="helpId" class="form-text text-muted">
+                {{ form.content.help_text }}
+            </small>
+            {{form.content}}
+        </p>
+    </div>
     <button class="btn btn-success mt-4 mb-4" type=" submit ">Create</button>
 </form>
     {% endif %}
