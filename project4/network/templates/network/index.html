@@ -1,32 +1,41 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-    {% if user.is_authenticated %}
-        <form action="{% url 'handlePost' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="" class="form-label">
-                    {{ form.content.label_tag }}
-                </label>
-                <p>
-                    <small id="helpId" class="form-text text-muted">
-                        {{ form.content.help_text }}
-                    </small>
-                    {{form.content}}
-                </p>
-                <button class="btn btn-success mt-4 mb-4" type=" submit ">Submit</button>
-            </div>
-        </form>
-    {% endif %}
+<div class='container-md'>
 
-    <div class="row">
-        {% for post in posts %}
-            <div class="col-md-6">
-                <p>{{ post.user }}</p>
-                <p>{{ post.content }}</p> 
-                <p>{{ post.posted_at }}</p>
-            </div>
-        {% endfor %}
+        {% if user.is_authenticated %}
+            <form action="{% url 'handlePost' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="" class="form-label">
+                        {{ form.content.label_tag }}
+                    </label>
+                    <p>
+                        <small id="helpId" class="form-text text-muted">
+                            {{ form.content.help_text }}
+                        </small>
+                        {{form.content}}
+                    </p>
+                    <button class="btn btn-success mt-4 mb-4" type=" submit ">Submit</button>
+                </div>
+            </form>
+        {% endif %}
+        
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-4 mx-auto">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{post.user}}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{post.posted_at}}</h6>
+                            <p class="card-text">
+                                <p>{{ post.content }}</p> 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}
