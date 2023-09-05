@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .forms import NewPost
@@ -16,7 +18,7 @@ def index(request):
                       "posts":getPosts,
                   })
     
-    
+@login_required    
 def handlePost(request):
     if request.method == 'POST':
         form = NewPost(request.POST)
@@ -30,6 +32,29 @@ def handlePost(request):
         form = NewPost()
 
     return render(request, 'your_template.html', {'form': form})
+
+
+@login_required
+def handleLikes(request, postId):
+    try:
+        post = Post.objects.get(id=postId)
+        user = request.user
+
+        if user in post.likes.all():
+            # User has already liked the post, so unlike it
+            post.likes.remove(user)
+            liked = False
+        else:
+            # User hasn't liked the post, so like it
+            post.likes.add(user)
+            liked = True
+
+        return JsonResponse({'message': 'Post liked/unliked', 'liked': liked})
+        # return redirect('index')
+
+    except Post.DoesNotExist:
+        return JsonResponse({'error': 'Post not found'})
+
 
 
 def login_view(request):
