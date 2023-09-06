@@ -33,23 +33,24 @@
                                 <p>{{ post.content }}</p> 
                             </p>
                             <p>
-                                <small>
-                                        {% if user.is_authenticated %}
-                                            {% if user not in post.likes.all %}
-                                                <!-- User has not liked the post -->
-                                                <i id="like-icon" data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
-                                            {% else %}
-                                                <!-- User has liked the post -->
-                                                <i id="unlike-icon" data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
-                                            {% endif %}
-                                        {% else %}
-                                            <!-- User is not authenticated -->
-                                            <i id="like-icon" data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
-                                        {% endif %}
-                                </small>
-
                             </p>
+                            <small>
+                                    {% if user.is_authenticated %}
+                                        {% if user not in post.likes.all %}
+                                            <!-- User has not liked the post -->
+                                            <i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                        {% else %}
+                                            <!-- User has liked the post -->
+                                            <i i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                        {% endif %}
+                                    {% else %}
+                                        <!-- User is not authenticated -->
+                                        <i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                    {% endif %}
+                            </small>
                         </div>
+                        <hr>
+                        <span class="label label-info" id="count-label-{{post.id}}">Likes: <span class="badge" id="count-badge-{{post.id}}">{{post.count_likes}}</span></span>
                     </div>
                 </div>
             {% endfor %}

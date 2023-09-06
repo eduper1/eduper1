@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('I am disliked')
                 // Hide the corresponding opposite icon if needed (e.g., dislike)
             }
+
+            const countLikes = data.countLikes;
+            console.log(countLikes);
+
+            const countBadge = document.getElementById(`count-badge-${postId}`);
+            if (countBadge) {
+                countBadge.textContent = countLikes;
+            }
         })
         .catch(error => {
             // Handle any errors here

@@ -49,12 +49,16 @@ def handleLikes(request, postId):
                 # User has already liked the post, so unlike it
                 post.likes.remove(user)
                 liked = False
+                
             else:
                 # User hasn't liked the post, so like it
                 post.likes.add(user)
                 liked = True
+                
+                
+            countLikes = post.count_likes()
 
-            return JsonResponse({'message': 'Post liked/unliked', 'liked': liked})
+            return JsonResponse({'message': 'Post liked/unliked', 'liked': liked, 'countLikes':countLikes})
             # return redirect('index')
 
     except Post.DoesNotExist:
