@@ -34,15 +34,18 @@
                             </p>
                             <p>
                                 <small>
-                                    {% if user.is_authenticated %}
-                                        {% if post.likes %}
-                                            <!-- User has liked the post -->
-                                                <i id="unlike-icon" onClick="handleLikes({{post.id}})" class="fa fa-thumbs-up" style="font-size:36px;"></i>
+                                        {% if user.is_authenticated %}
+                                            {% if user not in post.likes.all %}
+                                                <!-- User has not liked the post -->
+                                                <i id="like-icon" data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                            {% else %}
+                                                <!-- User has liked the post -->
+                                                <i id="unlike-icon" data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                            {% endif %}
                                         {% else %}
-                                            <!-- User has not liked the post -->
-                                                <i id="like-icon" onClick="handleLikes({{post.id}})" class="fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                            <!-- User is not authenticated -->
+                                            <i id="like-icon" data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
                                         {% endif %}
-                                    {% endif %}
                                 </small>
 
                             </p>

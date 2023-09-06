@@ -40,17 +40,22 @@ def handleLikes(request, postId):
         post = Post.objects.get(id=postId)
         user = request.user
 
-        if user in post.likes.all():
-            # User has already liked the post, so unlike it
-            post.likes.remove(user)
-            liked = False
+        if not user.is_authenticated:
+            # User is not authenticated, return an error response
+            return redirect('login')
         else:
-            # User hasn't liked the post, so like it
-            post.likes.add(user)
-            liked = True
+            
+            if user in post.likes.all():
+                # User has already liked the post, so unlike it
+                post.likes.remove(user)
+                liked = False
+            else:
+                # User hasn't liked the post, so like it
+                post.likes.add(user)
+                liked = True
 
-        return JsonResponse({'message': 'Post liked/unliked', 'liked': liked})
-        # return redirect('index')
+            return JsonResponse({'message': 'Post liked/unliked', 'liked': liked})
+            # return redirect('index')
 
     except Post.DoesNotExist:
         return JsonResponse({'error': 'Post not found'})
