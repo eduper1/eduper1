@@ -59,6 +59,65 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error(error);
          });
     }
+
+    // handle editPost
+        // Add click event listeners to all "Edit" buttons
+    const editButtons = document.querySelectorAll('.edit-btn');
+
+    editButtons.forEach((editButton) => {
+        console.log('I am clicked', editButton);
+        editButton.addEventListener('click', function () {
+            const editPostId = this.getAttribute('data-editPost-id');
+            const postElement = document.getElementById(`post-card-${editPostId}`);
+            
+            if (postElement) {
+                console.log(postElement.childNodes);
+                const postContent = postElement.querySelector('#post-card-' + editPostId).textContent;
+
+                // Create a textarea for editing
+                const textarea = document.createElement('textarea');
+                textarea.value = postContent;
+                textarea.setAttribute('rows', '4');
+
+                // Create a "Save" button
+                const saveButton = document.createElement('button');
+                saveButton.textContent = 'Save';
+
+                // Replace the post content with the textarea and save button
+                postElement.innerHTML = '';
+                postElement.appendChild(textarea);
+                postElement.appendChild(saveButton);
+
+                // Add a click event listener to the "Save" button
+                saveButton.addEventListener('click', function () {
+                    const updatedContent = textarea.value;
+
+                    // Send an AJAX request to update the post content
+                    fetch(`/editPost/${postId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json',
+                        },
+                        mode:'same-origin',
+                        body: JSON.stringify({ content: updatedContent }),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Replace the textarea with the updated post content
+                            postElement.innerHTML = `<p>${updatedContent}</p>`;
+                        } else {
+                            console.error('Failed to update post.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                });
+            }
+        });
+    });
 });
 
 

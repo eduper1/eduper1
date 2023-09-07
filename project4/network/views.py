@@ -1,9 +1,10 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from .forms import NewPost
 
@@ -64,7 +65,25 @@ def handleLikes(request, postId):
     except Post.DoesNotExist:
         return JsonResponse({'error': 'Post not found'})
 
+# edit post
+def editPost(request, editId):
+    if request.method == 'POST':
+        try:
+            post = get_object_or_404(Post, id=editId, user=request.user)
+            if request.user == post.user:
+                    data = json.loads(request.body)
+                    new_content = data.get('content', '')
 
+                    post.content = new_content
+                    post.save()
+
+                    return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'error': 'You do not have permission to edit this post.'}, status=403)
+        except Post.DoesNotExist:
+            return JsonResponse({'error': 'Post not found'}, status=404)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def login_view(request):
     if request.method == "POST":
