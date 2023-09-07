@@ -66,10 +66,10 @@ def handleLikes(request, postId):
         return JsonResponse({'error': 'Post not found'})
 
 # edit post
-def editPost(request, editId):
+def editPost(request, editPostId):
     if request.method == 'POST':
         try:
-            post = get_object_or_404(Post, id=editId, user=request.user)
+            post = get_object_or_404(Post, id=editPostId, user=request.user)
             if request.user == post.user:
                     data = json.loads(request.body)
                     new_content = data.get('content', '')

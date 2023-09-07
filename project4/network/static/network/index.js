@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
          });
     }
 
+    console.log(document.querySelector('.card-text').textContent);
     // handle editPost
         // Add click event listeners to all "Edit" buttons
     const editButtons = document.querySelectorAll('.edit-btn');
@@ -68,15 +69,18 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('I am clicked', editButton);
         editButton.addEventListener('click', function () {
             const editPostId = this.getAttribute('data-editPost-id');
+            console.log(editPostId);
             const postElement = document.getElementById(`post-card-${editPostId}`);
+            console.log(postElement.textContent);
             
             if (postElement) {
-                console.log(postElement.childNodes);
-                const postContent = postElement.querySelector('#post-card-' + editPostId).textContent;
+                // console.log(postElement.childNodes);
+                // const postContent = postElement.querySelector('.card-text').textContent;
 
                 // Create a textarea for editing
                 const textarea = document.createElement('textarea');
-                textarea.value = postContent;
+                // textarea.value = postContent;
+                textarea.value = postElement.textContent;
                 textarea.setAttribute('rows', '4');
 
                 // Create a "Save" button
@@ -93,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const updatedContent = textarea.value;
 
                     // Send an AJAX request to update the post content
-                    fetch(`/editPost/${postId}`, {
+                    fetch(`/editPost/${editPostId}`, {
                         method: 'POST',
                         headers: {
                             'X-CSRFToken': csrfToken,
