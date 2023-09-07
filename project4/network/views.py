@@ -43,7 +43,7 @@ def handleLikes(request, postId):
 
         if not user.is_authenticated:
             # User is not authenticated, return an error response
-            return redirect('login')
+            return JsonResponse({'error': 'User not authenticated', 'redirect_url': redirect('login')})
         else:
             
             if user in post.likes.all():

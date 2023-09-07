@@ -20,25 +20,18 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({}),
         })
         .then(response => {
-            console.log(response);
-             if (response.status === 200) {
-                return response.json(); // Valid JSON response
-            } else if (response.status === 302) {
-                // Redirect response, extract the redirect URL
-                const redirectUrl = response.headers.get('Location');
-                if (redirectUrl && redirectUrl.includes('login')) {
-                    // Redirect the user to the new URL
-                    console.log('redirecting to:', redirectUrl);
-                    window.location.href = redirectUrl;
-            }
-        } else {
-            console.log('Handle other response statuses here');
-        }
+            // console.log(response);
+            return response.json();
         })
         .then(data => {
-            if (data.liked) {
+            // console.log(data.error);
+            if (data.error) {
+                // Redirect the user to the login URL with the 'next' parameter
+                window.location.href = "/accounts/login/?next=/post/";
+                return; // Return to exit further execution
+            } else if (data.liked) {
                 iconElement.style.color = 'blue'; // Change the color to blue when liked
-                console.log('I am liked', data.id);
+                console.log('I am liked', postId);
                 // Show the corresponding opposite icon if needed (e.g., dislike)
             } else {
                 iconElement.style.color = 'black'; // Change the color to black when not liked
@@ -53,10 +46,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (countBadge) {
                 countBadge.textContent = countLikes;
             }
+
+            if (data.redirect_url) {
+                console.error(data.redirect_url);
+                window.location.href = "/accounts/login/?next=/post/";
+                return; // Return to exit further execution
+            }
         })
         .catch(error => {
             // Handle any errors here
-            console.error(error);
+            // console.error(error);
          });
     }
 
