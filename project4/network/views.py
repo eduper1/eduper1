@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 import json
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -13,10 +14,14 @@ from .models import User,Post
 
 def index(request):
     getPosts = Post.objects.all().order_by('-posted_at')
+    paginator = Paginator(getPosts, 1)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html",
                   {
                       "form":NewPost(),
-                      "posts":getPosts,
+                    #   "posts":getPosts,
+                      "page_obj": page_obj,
                   })
     
 @login_required    

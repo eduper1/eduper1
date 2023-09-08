@@ -23,7 +23,7 @@
         {% endif %}
         
         <div class="row">
-            {% for post in posts %}
+            {% for post in page_obj %}
                 <div class="col-md-4 mx-auto">
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
@@ -60,6 +60,30 @@
                 </div>
             {% endfor %}
         </div>
+
+        <div class="raw mt-4">
+            <div class="col-md-4 mx-auto">
+                <nav aria-label="Page navigation">  
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        
+                        <li class="page-item active" aria-current="page">
+                        <span class="page-link" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></span>
+                        </li>
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                <nav>
+            </div>
+        </div>
+
+
     </div>
 
 {% endblock %}
