@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from .forms import NewPost
 
-from .models import User,Post
+from .models import User,Post,Profile
 
 
 def index(request):
@@ -37,7 +37,7 @@ def handlePost(request):
     else:
         form = NewPost()
 
-    return render(request, 'your_template.html', {'form': form})
+    return render(request, 'network/index.html', {'form': form})
 
 
 @login_required
@@ -89,6 +89,35 @@ def editPost(request, editPostId):
             return JsonResponse({'error': 'Post not found'}, status=404)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@login_required
+def profile(request, userId):
+    user = get_object_or_404(User, id=userId)
+    print(user)
+    profile_user = get_object_or_404(Profile, user=user)
+    print(profile_user.username)
+    followers_count = profile_user.followers_count()
+    following_count = profile_user.following_count()
+    # posts = Post.objects.filter(user=user).order_by('-posted_at')
+    getPosts = Post.objects.filter(user=user).order_by('-posted_at')
+    paginator = Paginator(getPosts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Check if the current user is following the profile user
+    is_following = False
+    if request.user.is_authenticated:
+        current_user = request.user
+        is_following = current_user in profile_user.followers.all()
+
+    return render(request, 'network/profile.html', {
+        'profile_user': profile_user,
+        'followers_count': followers_count,
+        'following_count': following_count,
+        'posts': page_obj,
+        'is_following': is_following,
+    })
+
 
 def login_view(request):
     if request.method == "POST":

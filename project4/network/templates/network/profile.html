@@ -1,0 +1,94 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h1>{{ user.username }} profile.</h1>
+    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+        <div class="card p-4">
+            <h4 class="mb-0">{{ profile_user.username }}</h4>
+            <span class="text-muted d-block mb-2">{{ profile_user.email }}</span>
+
+            <div class="image d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex mt-2">
+                    {% if is_following %}
+                        <button class="btn btn-primary btn-sm follow" id="unfollow-button">Unfollow</button>
+                    {% else %}
+                        <button class="btn btn-primary btn-sm follow" id="follow-button">Follow</button>
+                    {% endif %}
+                </div>
+
+                <div class="stats">
+                    <h6 class="mb-0">Followers</h6>
+                    <span>{{ followers_count }}</span>
+                </div>
+
+                <div class="stats">
+                    <h6 class="mb-0">Following</h6>
+                    <span>{{ following_count }}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                {% for post in page_obj %}
+                    <div class="col-md-4 mx-auto">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ post.user }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ post.posted_at }}</h6>
+                                <p class="card-text" id="post-card-{{ post.id }}">{{ post.content }}</p>
+
+                                <div class='container-fluid'>
+                                    <div class='row align-items-end'>
+                                        <div class='col'>
+                                            <small>
+                                                {% if user.is_authenticated %}
+                                                    {% if user not in post.likes.all %}
+                                                        <!-- User has not liked the post -->
+                                                        <i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                                    {% else %}
+                                                        <!-- User has liked the post -->
+                                                        <i i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <!-- User is not authenticated -->
+                                                    <i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                                {% endif %}
+                                            </small>
+                                            {% if user.is_authenticated and user == post.user %}
+                                                <button class='edit-btn btn btn-primary' data-editPost-id="{{ post.id }}">Edit</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <span class="label label-info" id="count-label-{{ post.id }}">Likes: <span class="badge" id="count-badge-{{ post.id }}">{{ post.count_likes }}</span></span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="raw mt-4">
+                <div class="col-md-4 mx-auto">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                            {% endif %}
+
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link" href="#">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                            </li>
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
