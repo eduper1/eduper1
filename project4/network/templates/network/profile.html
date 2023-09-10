@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-    <h1>{{ user.username }} profile.</h1>
+    {% comment %} <h1>{{ user.username }} profile.</h1> {% endcomment %}
     <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
         <div class="card p-4">
             <h4 class="mb-0">{{ profile_user.username }}</h4>
@@ -33,7 +33,7 @@
                     <div class="col-md-4 mx-auto">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <h5 class="card-title">{{ post.user }}</h5>
+                                <h5 class="card-title">{{ post.user.username }}</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{ post.posted_at }}</h6>
                                 <p class="card-text" id="post-card-{{ post.id }}">{{ post.content }}</p>
 
