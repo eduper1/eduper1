@@ -16,7 +16,7 @@ class Profile(models.Model):
         return self.followers.count()
 
     def following_count(self):
-        return self.user.following.count()
+        return self.user.userProfile.followers.count()
 
 # handle posts
 class Post(models.Model):

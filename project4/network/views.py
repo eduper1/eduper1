@@ -95,7 +95,7 @@ def profile(request, userId):
     user = get_object_or_404(User, id=userId)
     print(user)
     profile_user = get_object_or_404(Profile, user=user)
-    print(profile_user.username)
+    # print(profile_user.username)
     followers_count = profile_user.followers_count()
     following_count = profile_user.following_count()
     # posts = Post.objects.filter(user=user).order_by('-posted_at')
