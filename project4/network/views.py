@@ -14,7 +14,7 @@ from .models import User,Post,Profile
 
 def index(request):
     getPosts = Post.objects.all().order_by('-posted_at')
-    paginator = Paginator(getPosts, 1)
+    paginator = Paginator(getPosts, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html",
@@ -141,6 +141,25 @@ def handleFollows(request, profileId):
 
     # Redirect back to the profile page after the follow/unfollow action.
     return redirect('userprofile', userId=profileId)
+
+
+@login_required
+def followingPosts(request):
+    # Get the list of users that the current user follows
+    following_users = request.user.userProfile.followers.all()
+
+    # Get posts by users that the current user follows
+    following_posts = Post.objects.filter(user__in=following_users).order_by('-posted_at')
+
+    # Paginate the posts (similar to your "All Posts" view)
+    paginator = Paginator(following_posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'network/following.html', {
+        'page_obj': page_obj,
+    })
+
 
 
 def login_view(request):
