@@ -118,6 +118,30 @@ def profile(request, userId):
         'is_following': is_following,
     })
 
+def handleFollows(request, profileId):
+    profile_user = get_object_or_404(User, id=profileId)
+
+    if request.user == profile_user:
+        # Users can't follow/unfollow themselves, redirect or show an error message
+        return JsonResponse({'error': 'You cannot follow/unfollow yourself.'}, status=400)
+
+    current_user_profile = request.user.userProfile
+
+    if profile_user in current_user_profile.followers.all():
+        # User is currently following the profile user, so unfollow them.
+        current_user_profile.followers.remove(profile_user)
+    else:
+        # User is not following the profile user, so follow them.
+        current_user_profile.followers.add(profile_user)
+    # com_t = comment_text.save(commit=False)
+    #         com_t.comment_on = list_auction
+    #         com_t.comment_by = request.user
+    #         com_t.save()
+    current_user_profile.save()
+
+    # Redirect back to the profile page after the follow/unfollow action.
+    return redirect('userprofile', userId=profileId)
+
 
 def login_view(request):
     if request.method == "POST":
