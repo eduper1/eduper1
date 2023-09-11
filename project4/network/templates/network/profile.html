@@ -15,11 +15,13 @@
                             {% if request.user != profile_user.user %}
                                 <form method="post" action="{% url 'handleFollows' profile_user.user.id %}">
                                     {% csrf_token %}
-                                    {% if is_following %}
-                                        <button type="submit" class="btn btn-primary btn-sm follow" id="unfollow-button">Unfollow</button>
-                                    {% else %}
-                                        <button type="submit" class="btn btn-primary btn-sm follow" id="follow-button">Follow</button>
-                                    {% endif %}
+                                    <button type="submit" class="btn btn-primary btn-sm follow">
+                                        {% if is_following %}
+                                            Unfollow
+                                        {% else %}
+                                            Follow
+                                        {% endif %}
+                                    </button>
                                 </form>
                             {% endif %}
                         {% endif %}
