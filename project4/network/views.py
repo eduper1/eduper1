@@ -114,7 +114,7 @@ def profile(request, userId):
         'profile_user': profile_user,
         'followers_count': followers_count,
         'following_count': following_count,
-        'posts': page_obj,
+        'page_obj': page_obj,
         'is_following': is_following,
     })
 
