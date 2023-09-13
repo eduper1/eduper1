@@ -104,11 +104,17 @@ def profile(request, userId):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
+    
     # Check if the current user is following the profile user
     is_following = False
     if request.user.is_authenticated:
-        current_user = request.user
-        is_following = current_user in profile_user.followers.all()
+        current_user_profile = request.user.userProfile
+        is_following = current_user_profile.followers.filter(userProfile=profile_user).exists()
+
+    else:
+        is_following = False
+        
+    print(userId, request.user, is_following, profile_user, user, followers_count,following_count)
 
     return render(request, 'network/profile.html', {
         'profile_user': profile_user,
@@ -120,27 +126,27 @@ def profile(request, userId):
 
 def handleFollows(request, profileId):
     profile_user = get_object_or_404(User, id=profileId)
+    
+    if request.method == 'POST':
 
-    if request.user == profile_user:
-        # Users can't follow/unfollow themselves, redirect or show an error message
-        return JsonResponse({'error': 'You cannot follow/unfollow yourself.'}, status=400)
+        if request.user == profile_user:
+            # Users can't follow/unfollow themselves, redirect or show an error message
+            return JsonResponse({'error': 'You cannot follow/unfollow yourself.'}, status=400)
 
-    current_user_profile = request.user.userProfile
+        current_user_profile = request.user.userProfile
 
-    if profile_user in current_user_profile.followers.all():
-        # User is currently following the profile user, so unfollow them.
-        current_user_profile.followers.remove(profile_user)
-    else:
-        # User is not following the profile user, so follow them.
-        current_user_profile.followers.add(profile_user)
-    # com_t = comment_text.save(commit=False)
-    #         com_t.comment_on = list_auction
-    #         com_t.comment_by = request.user
-    #         com_t.save()
-    current_user_profile.save()
+        if profile_user in current_user_profile.followers.all():
+            # User is currently following the profile user, so unfollow them.
+            current_user_profile.followers.remove(profile_user)
+        else:
+            # User is not following the profile user, so follow them.
+            current_user_profile.followers.add(profile_user)
 
-    # Redirect back to the profile page after the follow/unfollow action.
-    return redirect('userprofile', userId=profileId)
+            # Update the counts for the current user and the profile user
+        current_user_profile.save()
+        profile_user.save()
+        # Redirect back to the profile page after the follow/unfollow action.
+        return redirect('userprofile', userId=profileId)
 
 
 @login_required
