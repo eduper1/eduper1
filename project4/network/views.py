@@ -96,8 +96,6 @@ def profile(request, userId):
     print(user)
     profile_user = get_object_or_404(Profile, user=user)
     # print(profile_user.username)
-    followers_count = profile_user.followers_count()
-    following_count = profile_user.following_count()
     # posts = Post.objects.filter(user=user).order_by('-posted_at')
     getPosts = Post.objects.filter(user=user).order_by('-posted_at')
     paginator = Paginator(getPosts, 10)
@@ -109,11 +107,17 @@ def profile(request, userId):
     is_following = False
     if request.user.is_authenticated:
         current_user_profile = request.user.userProfile
-        is_following = current_user_profile.followers.filter(userProfile=profile_user).exists()
+        is_following = current_user_profile.following.filter(userProfile=profile_user).exists()
 
     else:
         is_following = False
-        
+    
+    #     # Get the counts
+    # followers_count = profile_user.followers.count()
+    # following_count = request.user.userProfile.followers.count()    
+    
+    followers_count = profile_user.followers_count()
+    following_count = profile_user.following_count()
     print(userId, request.user, is_following, profile_user, user, followers_count,following_count)
 
     return render(request, 'network/profile.html', {
@@ -128,31 +132,34 @@ def handleFollows(request, profileId):
     profile_user = get_object_or_404(User, id=profileId)
     
     if request.method == 'POST':
-
         if request.user == profile_user:
             # Users can't follow/unfollow themselves, redirect or show an error message
             return JsonResponse({'error': 'You cannot follow/unfollow yourself.'}, status=400)
 
         current_user_profile = request.user.userProfile
 
-        if profile_user in current_user_profile.followers.all():
-            # User is currently following the profile user, so unfollow them.
-            current_user_profile.followers.remove(profile_user)
+        if profile_user in current_user_profile.following.all():
+            # User (X) is currently following the profile user (Y), so unfollow them.
+            current_user_profile.following.remove(profile_user)
+            profile_user.userProfile.followers.remove(request.user)
         else:
-            # User is not following the profile user, so follow them.
-            current_user_profile.followers.add(profile_user)
+            # User (X) is not following the profile user (Y), so follow them.
+            current_user_profile.following.add(profile_user)
+            profile_user.userProfile.followers.add(request.user)
 
-            # Update the counts for the current user and the profile user
+        # Save the changes
         current_user_profile.save()
-        profile_user.save()
+        profile_user.userProfile.save()
+
         # Redirect back to the profile page after the follow/unfollow action.
         return redirect('userprofile', userId=profileId)
+
 
 
 @login_required
 def followingPosts(request):
     # Get the list of users that the current user follows
-    following_users = request.user.userProfile.followers.all()
+    following_users = request.user.userProfile.following.all()
 
     # Get posts by users that the current user follows
     following_posts = Post.objects.filter(user__in=following_users).order_by('-posted_at')

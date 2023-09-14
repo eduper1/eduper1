@@ -7,7 +7,8 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, related_name='userProfile', on_delete=models.CASCADE)
-    followers = models.ManyToManyField(User, related_name='following', blank=True)
+    followers = models.ManyToManyField(User, related_name='followers', blank=True)
+    following = models.ManyToManyField(User, related_name='following', blank=True)
 
     def __str__(self):
         return self.user.username
@@ -16,7 +17,8 @@ class Profile(models.Model):
         return self.followers.count()
 
     def following_count(self):
-        return self.user.userProfile.followers.count()
+        return self.following.count()
+
 
 # handle posts
 class Post(models.Model):
