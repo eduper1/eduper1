@@ -6,9 +6,10 @@
     <div class="container ">
         <div class='row mt-4 mb-4 p-3 d-flex justify-content-center'>
             <div class="card border-primary text-center p-4 w-75 ">
-                <h4 class="mb-0">{{ profile_user.user.username }}</h4>
+                <h4 class="mb-0">{{ profile_user.user.username|title }}</h4>
                 <span class="text-muted d-block mb-2">{{ profile_user.user.email }}</span>
                 <span class="text-muted d-block mb-2">Joined on: {{ profile_user.user.date_joined }}</span>
+                <span class="text-muted d-block mb-2">Last login: {{ profile_user.user.last_login }}</span>
                 <div class="d-flex flex-column justify-content-center align-items-center">
                     <div class="d-flex mt-2">
                         {% if user.is_authenticated %}
@@ -48,39 +49,50 @@
 
         <div class="row mt-4 mb-4 p-3 d-flex justify-content-center">
             {% for post in page_obj %}
-                <div class="col-md-4 mx-auto">
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ post.user.username }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">{{ post.posted_at }}</h6>
-                            <p class="card-text" id="post-card-{{ post.id }}">{{ post.content }}</p>
+                <div class="col-md-4 mx-auto mt-4">
+                    <div class="card-group">
+                        <div class="card border-primary" style="width: 18rem;">
+                            <div class="card-header">
+                                <a href="{% url 'userprofile' post.user.id %}">
+                                    <h5 class="card-title">{{ post.user.username|title }}</h5>
+                                </a>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ post.posted_at }}</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text" id="post-card-{{ post.id }}">{{ post.content }}</p>
+                            </div>
+                            <div class="card-footer">
 
-                            <div class='container-fluid'>
-                                <div class='row align-items-end'>
-                                    <div class='col'>
-                                        <small>
-                                            {% if user.is_authenticated %}
-                                                {% if user not in post.likes.all %}
-                                                    <!-- User has not liked the post -->
-                                                    <i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                <div class='container-fluid'>
+                                    <div class='row align-items-end'>
+                                        <div class='col'>
+                                            <small>
+                                                {% if user.is_authenticated %}
+                                                    {% if user not in post.likes.all %}
+                                                        <!-- User has not liked the post -->
+                                                        <i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                                    {% else %}
+                                                        <!-- User has liked the post -->
+                                                        <i i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                                    {% endif %}
                                                 {% else %}
-                                                    <!-- User has liked the post -->
-                                                    <i i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                                    <!-- User is not authenticated -->
+                                                    <i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
                                                 {% endif %}
-                                            {% else %}
-                                                <!-- User is not authenticated -->
-                                                <i data-post-id="{{ post.id }}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                            </small>
+                                        </div>
+                                        <div class="col">
+                                            <span class="label label-info" id="count-label-{{ post.id }}">Likes: <span class="badge" id="count-badge-{{ post.id }}">{{ post.count_likes }}</span></span>
+                                        </div>
+                                        <div class="col">
+                                            {% if user.is_authenticated and user == post.user %}
+                                                <button class='edit-btn btn btn-primary' data-editPost-id="{{ post.id }}">Edit</button>
                                             {% endif %}
-                                        </small>
-                                        {% if user.is_authenticated and user == post.user %}
-                                            <button class='edit-btn btn btn-primary' data-editPost-id="{{ post.id }}">Edit</button>
-                                        {% endif %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                        <span class="label label-info" id="count-label-{{ post.id }}">Likes: <span class="badge" id="count-badge-{{ post.id }}">{{ post.count_likes }}</span></span>
                     </div>
                 </div>
             {% endfor %}

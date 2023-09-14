@@ -24,38 +24,48 @@
         
         <div class="row">
             {% for post in page_obj %}
-                <div class="col-md-4 mx-auto">
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <a class="nav-link" href="{% url 'userprofile' post.user.id %}"><h5 class="card-title">{{post.user}}</h5></a>
-                            <h6 class="card-subtitle mb-2 text-muted">{{post.posted_at}}</h6>
-                            <p class="card-text" id="post-card-{{post.id}}">{{ post.content }}</p>
-                            <div class='container-fluid'>
-                                <div class='row align-items-end'>
-                                    <div class='col'>
-                                            <small>
-                                                    {% if user.is_authenticated %}
-                                                        {% if user not in post.likes.all %}
-                                                            <!-- User has not liked the post -->
-                                                            <i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                <div class="col-md-4 mx-auto mt-4">
+                    <div class="card-group">
+                        <div class="card border-primary" style="width: 18rem;">
+                            <div class="card-header">
+                                <a class="nav-link" href="{% url 'userprofile' post.user.id %}"><h5 class="card-title">{{post.user|title}}</h5></a>
+                                <h6 class="card-subtitle mb-2 text-muted">{{post.posted_at}}</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text" id="post-card-{{post.id}}">{{ post.content }}</p>
+
+                            </div>
+                            <div class="card-footer">
+                                    <div class='container-fluid'>
+                                        <div class='row align-items-end'>
+                                            <div class='col'>
+                                                <small>
+                                                        {% if user.is_authenticated %}
+                                                            {% if user not in post.likes.all %}
+                                                                <!-- User has not liked the post -->
+                                                                <i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
+                                                            {% else %}
+                                                                <!-- User has liked the post -->
+                                                                <i i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                                            {% endif %}
                                                         {% else %}
-                                                            <!-- User has liked the post -->
-                                                            <i i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:blue;"></i>
+                                                            <!-- User is not authenticated -->
+                                                            <i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
                                                         {% endif %}
-                                                    {% else %}
-                                                        <!-- User is not authenticated -->
-                                                        <i data-post-id="{{post.id}}" class="like-icon fa fa-thumbs-o-up" style="font-size:36px; color:black;"></i>
-                                                    {% endif %}
-                                            </small>
-                                            {% if user.is_authenticated and user == post.user %}
-                                                <button class='edit-btn btn btn-priamry' data-editPost-id="{{post.id}}">Edit</button>
-                                            {% endif %}
+                                                </small>
+                                            </div>
+                                            <div class="col">
+                                                <span class="label label-info" id="count-label-{{post.id}}">Likes: <span class="badge" id="count-badge-{{post.id}}">{{post.count_likes}}</span></span>
+                                            </div>
+                                            <div class="col">
+                                                {% if user.is_authenticated and user == post.user %}
+                                                    <button class='edit-btn btn btn-priamry' id="editId" data-editPost-id="{{post.id}}">Edit</button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
-                        <hr>
-                        <span class="label label-info" id="count-label-{{post.id}}">Likes: <span class="badge" id="count-badge-{{post.id}}">{{post.count_likes}}</span></span>
                     </div>
                 </div>
             {% endfor %}

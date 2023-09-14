@@ -20,14 +20,29 @@ document.addEventListener('DOMContentLoaded', function () {
             body: JSON.stringify({}),
         })
         .then(response => {
-            // console.log(response);
-            return response.json();
+            if (response.status === 302) {
+                // Get the redirect URL from the 'Location' header
+                const redirectUrl = response.headers.get('Location');
+
+                if (redirectUrl) {
+                    // Redirect the user to the specified URL
+                    console.log(redirectUrl);
+                    window.location.href = redirectUrl;
+                    return;
+                }
+            } else if (response.status === 200) {
+                // Handle a successful response
+                return response.json();
+            } else {
+                // Handle other response status codes
+                console.error(`Unexpected status code: ${response.status}`);
+            }
         })
         .then(data => {
             // console.log(data.error);
             if (data.error) {
                 // Redirect the user to the login URL with the 'next' parameter
-                window.location.href = "/accounts/login/?next=/post/";
+                // window.location.href = "/accounts/login/?next=/post/";
                 return; // Return to exit further execution
             } else if (data.liked) {
                 iconElement.style.color = 'blue'; // Change the color to blue when liked
