@@ -1,4 +1,1 @@
-install 
-pip install selenium
-
-django
+pip install Django==3.2.8
