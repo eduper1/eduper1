@@ -64,7 +64,7 @@ class ModelTestCase(TestCase):
 
         # Test if user1 can unfollow user2
         profile1.following.remove(self.user2)
-        # profile2.followers.remove(profile1.user)
+        profile2.followers.remove(profile1.user)
         self.assertFalse(profile1.following.filter(pk=self.user2.id).exists())
         self.assertFalse(profile2.followers.filter(pk=self.user1.id).exists())
         self.assertEqual(profile1.following_count(), 0)
