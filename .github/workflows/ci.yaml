@@ -22,4 +22,6 @@ jobs:
         run: pip install --user django
 
       - name: Run Django unit tests
-        run: python ../network/manage.py test
+        run: |
+          cd project4 
+          python manage.py test
