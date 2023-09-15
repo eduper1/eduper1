@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
             if (response.status === 302) {
                 // Get the redirect URL from the 'Location' header
+                //  this ain't working
                 const redirectUrl = response.headers.get('Location');
 
                 if (redirectUrl) {
@@ -42,29 +43,24 @@ document.addEventListener('DOMContentLoaded', function () {
             // console.log(data.error);
             if (data.error) {
                 // Redirect the user to the login URL with the 'next' parameter
-                // window.location.href = "/accounts/login/?next=/post/";
                 return; // Return to exit further execution
             } else if (data.liked) {
                 iconElement.style.color = 'blue'; // Change the color to blue when liked
-                console.log('I am liked', postId);
-                // Show the corresponding opposite icon if needed (e.g., dislike)
             } else {
                 iconElement.style.color = 'black'; // Change the color to black when not liked
-                console.log('I am disliked')
-                // Hide the corresponding opposite icon if needed (e.g., dislike)
             }
 
             const countLikes = data.countLikes;
-            console.log(countLikes);
 
             const countBadge = document.getElementById(`count-badge-${postId}`);
             if (countBadge) {
                 countBadge.textContent = countLikes;
             }
 
+            // this block not working
             if (data.redirect_url) {
                 console.error(data.redirect_url);
-                window.location.href = "/accounts/login/?next=/post/";
+                window.location.href = response.headers.get('Location');
                 return; // Return to exit further execution
             }
         })
@@ -83,13 +79,9 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('I am clicked', editButton);
         editButton.addEventListener('click', function () {
             const editPostId = this.getAttribute('data-editPost-id');
-            console.log(editPostId);
             const postElement = document.getElementById(`post-card-${editPostId}`);
-            console.log(postElement.textContent);
             
             if (postElement) {
-                // console.log(postElement.childNodes);
-                // const postContent = postElement.querySelector('.card-text').textContent;
 
                 // Create a textarea for editing
                 const textarea = document.createElement('textarea');

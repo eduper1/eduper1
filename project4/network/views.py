@@ -14,13 +14,12 @@ from .models import User,Post,Profile
 
 def index(request):
     getPosts = Post.objects.all().order_by('-posted_at')
-    paginator = Paginator(getPosts, 5)
+    paginator = Paginator(getPosts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html",
                   {
                       "form":NewPost(),
-                    #   "posts":getPosts,
                       "page_obj": page_obj,
                   })
     
@@ -29,7 +28,6 @@ def handlePost(request):
     if request.method == 'POST':
         form = NewPost(request.POST)
         if form.is_valid():
-            # Save the post or perform any other actions
             post = form.save(commit=False)
             post.user = request.user
             post.save()
@@ -95,8 +93,6 @@ def profile(request, userId):
     user = get_object_or_404(User, id=userId)
     print(user)
     profile_user = get_object_or_404(Profile, user=user)
-    # print(profile_user.username)
-    # posts = Post.objects.filter(user=user).order_by('-posted_at')
     getPosts = Post.objects.filter(user=user).order_by('-posted_at')
     paginator = Paginator(getPosts, 10)
     page_number = request.GET.get('page')
@@ -112,13 +108,9 @@ def profile(request, userId):
     else:
         is_following = False
     
-    #     # Get the counts
-    # followers_count = profile_user.followers.count()
-    # following_count = request.user.userProfile.followers.count()    
     
     followers_count = profile_user.followers_count()
     following_count = profile_user.following_count()
-    print(userId, request.user, is_following, profile_user, user, followers_count,following_count)
 
     return render(request, 'network/profile.html', {
         'profile_user': profile_user,

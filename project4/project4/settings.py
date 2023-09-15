@@ -124,4 +124,4 @@ AUTH_USER_MODEL = 'network.User'
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/login'
