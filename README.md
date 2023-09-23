@@ -9,7 +9,7 @@ Here are some ideas to get you started:-->
 - 🌱 I’m currently sharpening my Python skills.
 - 👯 I’m looking to collaborate on open source projects.
 <!-- 🤔 I’m looking for help with ...-->
-- 💬 Ask me about Python, HTML, CSS, and JavaScript.
+- 💬 Ask me about Python, Django, HTML, CSS, JavaScript, and React.
 - 📫 How to reach me: [@sirus_click](https://twitter.com/sirus_click)
 <!--- 😄 Pronouns: ...
 - ⚡ Fun fact: ...
