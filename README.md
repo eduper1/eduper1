@@ -1,13 +1,12 @@
-**Mohamed Abdi**
-
-👋 Hi there!
+👋 Hi there! I am ** Mohamed **
 
 I'm currently:
 - 🔭 Working on open source projects
 - 🌱 Sharpening my Python skills
+- Learnig Java
 - 👯 Looking to collaborate on open source projects
 
-💬 Ask me about Python, Django, HTML, CSS, JavaScript, and React.
+💬 Ask me about Python, Django, HTML, CSS, Java, JavaScript, and React.
 
 📫 Reach me on Twitter: [@sirus_click](https://twitter.com/sirus_click)
 
